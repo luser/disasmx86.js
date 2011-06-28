@@ -1,0 +1,6 @@
+disasmx86.js: A work-in-progress x86 disassembler written in JavaScript.
+
+Requires a browser that supports typed arrays. Only tested in Firefox
+nightly builds currently.
+
+Best used in conjunction with https://github.com/luser/elf.js currently.
