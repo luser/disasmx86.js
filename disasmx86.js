@@ -6,7 +6,7 @@ const gpregs = {
 };
 
 // Segment registers.
-const segregs = ["%es","%cs","%ss","%ds","%fs","%fs"];
+const segregs = ["%es","%cs","%ss","%ds","%fs","%gs"];
 
 const flags = {
     PREFIX_LOCK: 1,
@@ -57,7 +57,9 @@ const opcodes_x86 = {
     //0x0B OR Gv,Ev
     //0x0C OR AL,Ib
     //0x0D OR rAX,Iz
-    //0x0E PUSH CS
+    0x0e: {name:"push",
+           src_type: "RS",
+           src:1},
     //0x0F XXX: two-byte opcodes
     //0x10 ADC Eb,Gb
     //0x11 ADC Ev,Gv
@@ -65,16 +67,24 @@ const opcodes_x86 = {
     //0x13 ADC Gv,Ev
     //0x14 ADC AL,Ib
     //0x15 ADC rAX,Iz
-    //0x16 PUSH SS
-    //0x17 POP SS
+    0x16: {name:"push",
+           src_type: "RS",
+           src:2},
+    0x17: {name:"pop",
+           src_type: "RS",
+           src:2},
     //0x18 SBB Eb,Gb
     //0x19 SBB Ev,Gv
     //0x1A SBB Gb,Eb
     //0x1B SBB Gv,Ev
     //0x1C SBB AL,Ib
     //0x1D SBB rAX,Iz
-    //0x1E PUSH DS
-    //0x1F POP DS
+    0x1E: {name:"push",
+           src_type: "RS",
+           src:3},
+    0x1F: {name:"pop",
+           src_type: "RS",
+           src:3},
     //0x20 AND Eb,Gb
     //0x21 AND Ev,Gv
     //0x22 AND Gb,Eb

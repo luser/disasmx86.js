@@ -35,6 +35,31 @@ test("disassemble instruction single bytes", function() {
     equals(res[0].src, "%es");
     equals(res[1], 1);
 
+    res = disassemble_x86_instruction([0x0e], 0);
+    equals(res[0].name, "push");
+    equals(res[0].src, "%cs");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0x16], 0);
+    equals(res[0].name, "push");
+    equals(res[0].src, "%ss");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0x17], 0);
+    equals(res[0].name, "pop");
+    equals(res[0].src, "%ss");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0x1e], 0);
+    equals(res[0].name, "push");
+    equals(res[0].src, "%ds");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0x1f], 0);
+    equals(res[0].name, "pop");
+    equals(res[0].src, "%ds");
+    equals(res[1], 1);
+
     res = disassemble_x86_instruction([0x27], 0);
     equals(res[0].name, "daa");
     equals(res[1], 1);
