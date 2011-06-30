@@ -328,21 +328,21 @@ const opcodes_x86 = {
            src_type: null,
            aux_type: null,
            dest: 0, src:0, aux:0},
-    //0x91
-    //0x92
-    //0x93
-    //0x94
-    //0x95
-    //0x96
-    //0x97
-    //0x98
-    //0x99
-    //0x9A
-    //0x9B
-    //0x9C
-    //0x9D
-    //0x9E
-    //0x9F
+    //0x91 XCHG rCX,rAX
+    //0x92 XCHG rDX,rAX
+    //0x93 XCHG rBX,rAX
+    //0x94 XCHG rSP,rAX
+    //0x95 XCHG rBP,rAX
+    //0x96 XCHG rSI,rAX
+    //0x97 XCHG rDI,rAX
+    //0x98 CBW/CWDE
+    //0x99 CWD/CDQ
+    //0x9A CALL Ap
+    //0x9B WAIT/FWAIT
+    //0x9C PUSHF Fv
+    //0x9D POPF Fv
+    //0x9E SAHF
+    //0x9F LAFH
     //0xA0
     //0xA1
     //0xA2
