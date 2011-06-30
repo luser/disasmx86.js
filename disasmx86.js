@@ -1,9 +1,11 @@
+// General-purpose registers, indexed by operand size in bytes.
 const gpregs = {
     1: ["%al", "%cl", "%dl", "%bl", "%ah", "%ch", "%dh", "%bh"],
     2: ["%ax", "%cx", "%dx", "%bx", "%sp", "%bp", "%si", "%di"],
     4: ["%eax", "%ecx", "%edx", "%ebx", "%esp", "%ebp", "%esi", "%edi"]
 };
 
+// Segment registers.
 const segregs = ["%es","%cs","%ss","%ds","%fs","%fs"];
 
 const flags = {
@@ -418,6 +420,11 @@ function fetch_byte(bytes, offset) {
     return bytes[offset];
 }
 
+/*
+ * Given a register value |reg|, return the register name
+ * according to the operand size as defined in the opcode
+ * definition |opsize| and the current |config|.
+ */
 function decode_register(reg, opsize, config) {
     var size;
     switch (opsize) {
@@ -440,6 +447,10 @@ function decode_register(reg, opsize, config) {
     return gpregs[size][reg];
 }
 
+/*
+ * Decode the Mod R/M byte |modrm|. |which| can be "reg" or "rm".
+ * |opsize| is the operand size defined for the current instruction.
+ */
 function decode_modrm(modrm, which, opsize, config) {
     var mod = (modrm & 0xc0) >> 6;
     var reg = (modrm & 0x38) >> 3;
@@ -516,7 +527,8 @@ function disassemble_x86_instruction(bytes, offset) {
     var length = 1;
     var config = {addr_size:4, op_size:4, lock:false, strops: null, segment:null};
     var size = handle_prefixes(bytes, offset, config, 4);
-    var op = bytes[offset + size];
+    offset += size;
+    var op = bytes[offset];
     if (op in opcodes_x86) {
         var insn = opcodes_x86[op];
         //TODO: handle multi-byte opcodes
