@@ -35,6 +35,22 @@ test("disassemble instruction single bytes", function() {
     equals(res[0].src, "%es");
     equals(res[1], 1);
 
+    res = disassemble_x86_instruction([0x27], 0);
+    equals(res[0].name, "daa");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0x2f], 0);
+    equals(res[0].name, "das");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0x37], 0);
+    equals(res[0].name, "aaa");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0x3f], 0);
+    equals(res[0].name, "aas");
+    equals(res[1], 1);
+
     res = disassemble_x86_instruction([0x40], 0);
     equals(res[0].name, "inc");
     equals(res[0].src, "%eax");
@@ -195,12 +211,52 @@ test("disassemble instruction single bytes", function() {
     equals(res[0].src, "%edi");
     equals(res[1], 1);
 
+    res = disassemble_x86_instruction([0x9b], 0);
+    equals(res[0].name, "fwait");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0x9c], 0);
+    equals(res[0].name, "pushf");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0x9d], 0);
+    equals(res[0].name, "popf");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0x9e], 0);
+    equals(res[0].name, "sahf");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0x9f], 0);
+    equals(res[0].name, "lahf");
+    equals(res[1], 1);
+
     res = disassemble_x86_instruction([0xc3], 0);
     equals(res[0].name, "ret");
     equals(res[1], 1);
 
     res = disassemble_x86_instruction([0xc9], 0);
     equals(res[0].name, "leave");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0xcb], 0);
+    equals(res[0].name, "lret");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0xcc], 0);
+    equals(res[0].name, "int3");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0xce], 0);
+    equals(res[0].name, "into");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0xcf], 0);
+    equals(res[0].name, "iret");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0xd6], 0);
+    equals(res[0].name, "salc");
     equals(res[1], 1);
 
     res = disassemble_x86_instruction([0xf4], 0);

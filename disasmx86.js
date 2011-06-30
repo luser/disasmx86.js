@@ -25,38 +25,30 @@ const opcodes_x86 = {
            src_type: "E",
            src_size: "b",
            dest_type: "G",
-           dest_size: "b",
-           aux_type: null},
+           dest_size: "b"},
     0x01: {name:"add",
            src_type: "E",
            src_size: "v",
            dest_type: "G",
-           dest_size: "v",
-           aux_type: null},
+           dest_size: "v"},
     0x02: {name:"add",
            src_type: "G",
            src_size: "b",
            dest_type: "E",
-           dest_size: "b",
-           aux_type: null},
+           dest_size: "b"},
     0x03: {name:"add",
            src_type: "G",
            src_size: "v",
            dest_type: "E",
-           dest_size: "v",
-           aux_type: null},
+           dest_size: "v"},
     //0x04 ADD AL,Ib
     //0x05 ADD rAX,Iz
     0x06: {name:"push",
-           dest_type: null,
            src_type: "RS",
-           aux_type: null,
-           dest: 0, src:0},
+           src:0},
     0x07: {name:"pop",
-           dest_type: null,
            src_type: "RS",
-           aux_type: null,
-           dest: 0, src:0},
+           src:0},
     //0x08 OR Eb,Gb
     //0x09 OR Ev,Gv
     //0x0A OR Gb,Eb
@@ -88,7 +80,7 @@ const opcodes_x86 = {
     //0x24 AND AL,Ib
     //0x25 AND rAX,Iz
     //0x26 XXX: segment override prefix ES
-    //0x27 DAA
+    0x27: {name:"daa"},
     //0x28 SUB Eb,Gb
     //0x29 SUB Ev,Gv
     //0x2A SUB Gb,Eb
@@ -96,7 +88,7 @@ const opcodes_x86 = {
     //0x2C SUB AL,Ib
     //0x2D SUB rAX,Iz
     //0x2E XXX: segment override prefix CS
-    //0x2F DAS
+    0x2F: {name:"das"},
     //0x30 XOR Eb,Gb
     //0x31 XOR Ev,Gv
     //0x32 XOR Gb,Eb
@@ -104,7 +96,7 @@ const opcodes_x86 = {
     //0x34 XOR AL,Ib
     //0x35 XOR rAX,Iz
     //0x36 XXX: segment override prefix SS
-    //0x37 AAA
+    0x37: {name:"aaa"},
     //0x38 CMP Eb,Gb
     //0x39 CMP Ev,Gv
     //0x3A CMP Gb,Eb
@@ -112,177 +104,111 @@ const opcodes_x86 = {
     //0x3C CMP AL,Ib
     //0x3D CMP rAX,Iz
     //0x3E XXX: segment override prefix DS
-    //0x3F AAS
+    0x3f: {name:"aas"},
     0x40: {name:"inc",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:0, aux:0},
+           src:0},
     0x41: {name:"inc",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:1, aux:0},
+           src:1},
     0x42: {name:"inc",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:2, aux:0},
+           src:2},
     0x43: {name:"inc",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:3, aux:0},
+           src:3},
     0x44: {name:"inc",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:4, aux:0},
+           src:4},
     0x45: {name:"inc",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:5, aux:0},
+           src:5},
     0x46: {name:"inc",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:6, aux:0},
+           src:6},
     0x47: {name:"inc",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:7, aux:0},
+           src:7},
     0x48: {name:"dec",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:0, aux:0},
+           src:0},
     0x49: {name:"dec",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:1, aux:0},
+           src:1},
     0x4a: {name:"dec",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:2, aux:0},
+           src:2},
     0x4b: {name:"dec",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:3, aux:0},
+           src:3},
     0x4c: {name:"dec",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:4, aux:0},
+           src:4},
     0x4d: {name:"dec",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:5, aux:0},
+           src:5},
     0x4e: {name:"dec",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:6, aux:0},
+           src:6},
     0x4f: {name:"dec",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:7, aux:0},
+           src:7},
     0x50: {name:"push",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:0, aux:0},
+           src:0},
     0x51: {name:"push",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:1, aux:0},
+           src:1},
     0x52: {name:"push",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:2, aux:0},
+           src:2},
     0x53: {name:"push",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:3, aux:0},
+           src:3},
     0x54: {name:"push",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:4, aux:0},
+           src:4},
     0x55: {name:"push",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:5, aux:0},
+           src:5},
     0x56: {name:"push",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:6, aux:0},
+           src:6},
     0x57: {name:"push",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:7, aux:0},
+           src:7},
     0x58: {name:"pop",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:0, aux:0},
+           src:0},
     0x59: {name:"pop",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:1, aux:0},
+           src:1},
     0x5a: {name:"pop",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:2, aux:0},
+           src:2},
     0x5b: {name:"pop",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:3, aux:0},
+           src:3},
     0x5c: {name:"pop",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:4, aux:0},
+           src:4},
     0x5d: {name:"pop",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:5, aux:0},
+           src:5},
     0x5e: {name:"pop",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:6, aux:0},
+           src:6},
     0x5f: {name:"pop",
-           dest_type: null,
            src_type: "RR",
-           aux_type: null,
-           dest: 0, src:7, aux:0},
+           src:7},
     //0x60 PUSHA[D]
     //0x61 POPA[D]
     //0x62 BOUND Gv,Ma
     //0x63 ARPL Ew,Gw
     //0x64 XXX: segment override prefix FS
     //0x65 XXX: segment override prefix GS
-    0x66: {prefix:true,
-           prefix_type:flags.PREFIX_OPERAND_SIZE},
-    0x67: {prefix:true,
-           prefix_type:flags.PREFIX_ADDR_SIZE},
+    0x66: {prefix:flags.PREFIX_OPERAND_SIZE},
+    0x67: {prefix:flags.PREFIX_ADDR_SIZE},
     //0x68 PUSH Iz
     //0x69 IMUL Gv,Ev,Iz
     //0x6A PUSH Ib
@@ -323,11 +249,7 @@ const opcodes_x86 = {
     //0x8D LEA Gv,M
     //0x8E MOV Sw,Mw / MOV Sw,Rv
     //0x8F POP Ev
-    0x90: {name:"nop",
-           dest_type: null,
-           src_type: null,
-           aux_type: null,
-           dest: 0, src:0, aux:0},
+    0x90: {name:"nop"},
     //0x91 XCHG rCX,rAX
     //0x92 XCHG rDX,rAX
     //0x93 XCHG rBX,rAX
@@ -338,119 +260,107 @@ const opcodes_x86 = {
     //0x98 CBW/CWDE
     //0x99 CWD/CDQ
     //0x9A CALL Ap
-    //0x9B WAIT/FWAIT
-    //0x9C PUSHF Fv
-    //0x9D POPF Fv
-    //0x9E SAHF
-    //0x9F LAFH
-    //0xA0
-    //0xA1
-    //0xA2
-    //0xA3
-    //0xA4
-    //0xA5
-    //0xA6
-    //0xA7
-    //0xA8
-    //0xA9
-    //0xAA
-    //0xAB
-    //0xAC
-    //0xAD
-    //0xAE
-    //0xAF
-    //0xB0
-    //0xB1
-    //0xB2
-    //0xB3
-    //0xB4
-    //0xB5
-    //0xB6
-    //0xB7
-    //0xB8
-    //0xB9
-    //0xBA
-    //0xBB
-    //0xBC
-    //0xBD
-    //0xBE
-    //0xBF
-    //0xC0
-    //0xC1
-    //0xC2
-    0xc3: {name:"ret",
-           dest_type: null,
-           src_type: null,
-           aux_type: null,
-           dest: 0, src:0, aux:0},
-    //0xC4
-    //0xC5
-    //0xC6
-    //0xC7
-    //0xC8
-    0xc9: {name:"leave",
-           dest_type: null,
-           src_type: null,
-           aux_type: null,
-           dest: 0, src:0, aux:0},
-    //0xCA
-    //0xCB
-    //0xCC
-    //0xCD
-    //0xCE
-    //0xCF
-    //0xD0
-    //0xD1
-    //0xD2
-    //0xD3
-    //0xD4
-    //0xD5
-    //0xD6
-    //0xD7
-    //0xD8
-    //0xD9
-    //0xDA
-    //0xDB
-    //0xDC
-    //0xDD
-    //0xDE
-    //0xDF
-    //0xE0
-    //0xE1
-    //0xE2
-    //0xE3
-    //0xE4
-    //0xE5
-    //0xE6
-    //0xE7
-    //0xE8
-    //0xE9
-    //0xEA
-    //0xEB
-    //0xEC
-    //0xED
-    //0xEE
-    //0xEF
-    //0xF0
-    //0xF1
-    //0xF2
-    //0xF3
-    0xf4: {name:"hlt",
-           dest_type: null,
-           src_type: null,
-           aux_type: null,
-           dest: 0, src:0, aux:0}
-    //0xF5
-    //0xF6
-    //0xF7
-    //0xF8
-    //0xF9
-    //0xFA
-    //0xFB
-    //0xFC
-    //0xFD
-    //0xFE
-    //0xFF
+    0x9b: {name:"fwait"},
+    0x9c: {name:"pushf"},
+    0x9d: {name:"popf"},
+    0x9e: {name:"sahf"},
+    0x9f: {name:"lahf"},
+    //0xA0 MOV AL,Ob
+    //0xA1 MOV rAX,Ov
+    //0xA2 MOV Ob,AL
+    //0xA3 MOV Ov,rAX
+    //0xA4 MOVS Yb,Xb
+    //0xA5 MOVS Yv,Xv
+    //0xA6 CMPS Yb,Xb
+    //0xA7 CMPS Yv,Xv
+    //0xA8 TEST AL,Ib
+    //0xA9 TEST rAX,Iz
+    //0xAA STOS Yb,AL
+    //0xAB STOS Yv,rAX
+    //0xAC LODS AL,Xb
+    //0xAD LODS rAX,Xv
+    //0xAE SCAS Yb,AL
+    //0xAF SCAS Yv,rAX
+    //0xB0 MOV AL,Ib
+    //0xB1 MOV CL,Ib
+    //0xB2 MOV DL,Ib
+    //0xB3 MOV BL,Ib
+    //0xB4 MOV AH,Ib
+    //0xB5 MOV CH,Ib
+    //0xB6 MOV DH,Ib
+    //0xB7 MOV BH,Ib
+    //0xB8 MOV rAX,Iv
+    //0xB9 MOV rCX,Iv
+    //0xBA MOV rDX,Iv
+    //0xBB MOV rBX,Iv
+    //0xBC MOV rSP,Iv
+    //0xBD MOV rBP,Iv
+    //0xBE MOV rSI,Iv
+    //0xBF MOV rDI,Iv
+    //0xC0 group 2 Eb,Ib
+    //0xC1 group 2 Ev,Ib
+    //0xC2 RET Iw
+    0xc3: {name:"ret"},
+    //0xC4 LES Gz,Mp
+    //0xC5 LDS Gz,Mp
+    //0xC6 group 12 Eb,Ib
+    //0xC7 group 12 Ev,Iz
+    //0xC8 ENTER Iw,Ib
+    0xc9: {name:"leave"},
+    //0xCA RET Iw
+    0xcb: {name:"lret"},
+    0xcc: {name:"int3"},
+    //0xCD INT Ib
+    0xce: {name:"into"},
+    0xcf: {name:"iret"},
+    //0xD0 group 2 Eb,1
+    //0xD1 group 2 Ev,1
+    //0xD2 group 2 Eb,CL
+    //0xD3 group 2 Ev,CL
+    //0xD4 AAM Ib
+    //0xD5 AAD Ib
+    0xd6: {name:"salc"},
+    //0xD7 XLAT
+    //0xD8 FPU ESC 0
+    //0xD9 FPU ESC 1
+    //0xDA FPU ESC 2
+    //0xDB FPU ESC 3
+    //0xDC FPU ESC 4
+    //0xDD FPU ESC 5
+    //0xDE FPU ESC 6
+    //0xDF FPU ESC 7
+    //0xE0 LOOPNE/LOOPNZ Jb
+    //0xE1 LOOPE/LOOPZ Jb
+    //0xE2 LOOP Jb
+    //0xE3 JCXZ/JECX Jb
+    //0xE4 IN AL,Ib
+    //0xE5 IN eAX,Ib
+    //0xE6 OUT Ib,AL
+    //0xE7 OUT Ib,eAX
+    //0xE8 CALL Jz
+    //0xE9 JMP Jz
+    //0xEA JMP Ap
+    //0xEB JMP Jb
+    //0xEC IN AL,DX
+    //0xED IN eAX,DX
+    //0xEE OUT DX,AL
+    //0xEF OUT DX,eAX
+    //0xF0 LOCK prefix
+    0xf1: {name:"icebp"},
+    //0xF2 REPNE prefix
+    //0xF3 REP/REPE prefix
+    0xf4: {name:"hlt"},
+    0xf5: {name:"cmc"},
+    //0xF6 group 3 Eb
+    //0xF7 group 3 Ev
+    0xf8: {name:"clc"},
+    0xf9: {name:"stc"},
+    0xfa: {name:"cli"},
+    0xfb: {name:"sti"},
+    0xfc: {name:"cld"},
+    0xfd: {name:"std"}
+    //0xFE group 4 INC/DEC
+    //0xFF group 5 INC/DEC/...
 };
 
 /*
@@ -470,7 +380,7 @@ function handle_prefixes(bytes, offset, config, default_size) {
             break;
 
         count++;
-        switch (p.prefix_type) {
+        switch (p.prefix) {
         case flags.PREFIX_LOCK:
             config.lock = true;
             break;
