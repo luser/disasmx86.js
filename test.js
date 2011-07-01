@@ -289,7 +289,7 @@ test("disassemble instruction single bytes", function() {
     equals(res[1], 1);
 });
 
-test("disassemble single byte instruction modrm byte", function() {
+test("disassemble modrm byte registers", function() {
     var res = disassemble_x86_instruction([0x00, 0xc0], 0);
     equals(res[0].name, "add");
     equals(res[0].src, "%al");
@@ -298,104 +298,178 @@ test("disassemble single byte instruction modrm byte", function() {
 
     res = disassemble_x86_instruction([0x00, 0xc1], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%al");
-    equals(res[0].src, "%cl");
+    equals(res[0].src, "%al");
+    equals(res[0].dest, "%cl");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xc2], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%al");
-    equals(res[0].src, "%dl");
+    equals(res[0].src, "%al");
+    equals(res[0].dest, "%dl");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xc3], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%al");
-    equals(res[0].src, "%bl");
+    equals(res[0].src, "%al");
+    equals(res[0].dest, "%bl");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xc4], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%al");
-    equals(res[0].src, "%ah");
+    equals(res[0].src, "%al");
+    equals(res[0].dest, "%ah");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xc5], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%al");
-    equals(res[0].src, "%ch");
+    equals(res[0].src, "%al");
+    equals(res[0].dest, "%ch");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xc6], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%al");
-    equals(res[0].src, "%dh");
+    equals(res[0].src, "%al");
+    equals(res[0].dest, "%dh");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xc7], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%al");
-    equals(res[0].src, "%bh");
+    equals(res[0].src, "%al");
+    equals(res[0].dest, "%bh");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xc8], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%cl");
-    equals(res[0].src, "%al");
+    equals(res[0].src, "%cl");
+    equals(res[0].dest, "%al");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xd0], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%dl");
-    equals(res[0].src, "%al");
+    equals(res[0].src, "%dl");
+    equals(res[0].dest, "%al");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xd8], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%bl");
-    equals(res[0].src, "%al");
+    equals(res[0].src, "%bl");
+    equals(res[0].dest, "%al");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xe0], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%ah");
-    equals(res[0].src, "%al");
+    equals(res[0].src, "%ah");
+    equals(res[0].dest, "%al");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xe8], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%ch");
-    equals(res[0].src, "%al");
+    equals(res[0].src, "%ch");
+    equals(res[0].dest, "%al");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xf0], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%dh");
-    equals(res[0].src, "%al");
+    equals(res[0].src, "%dh");
+    equals(res[0].dest, "%al");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x00, 0xf8], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%bh");
-    equals(res[0].src, "%al");
+    equals(res[0].src, "%bh");
+    equals(res[0].dest, "%al");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x01, 0xc0], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%eax");
     equals(res[0].src, "%eax");
+    equals(res[0].dest, "%eax");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x01, 0xc1], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%eax");
-    equals(res[0].src, "%ecx");
+    equals(res[0].src, "%eax");
+    equals(res[0].dest, "%ecx");
     equals(res[1], 2);
 
     res = disassemble_x86_instruction([0x01, 0xc8], 0);
     equals(res[0].name, "add");
-    equals(res[0].dest, "%ecx");
+    equals(res[0].src, "%ecx");
+    equals(res[0].dest, "%eax");
+    equals(res[1], 2);
+});
+
+test("single byte instructions + modrm bytes", function() {
+    var res = disassemble_x86_instruction([0x00, 0xc1], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src, "%al");
+    equals(res[0].dest, "%cl");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x01, 0xc1], 0);
+    equals(res[0].name, "add");
     equals(res[0].src, "%eax");
+    equals(res[0].dest, "%ecx");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x02, 0xc1], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src, "%cl");
+    equals(res[0].dest, "%al");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x03, 0xc1], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src, "%ecx");
+    equals(res[0].dest, "%eax");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x08, 0xc1], 0);
+    equals(res[0].name, "or");
+    equals(res[0].src, "%al");
+    equals(res[0].dest, "%cl");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x09, 0xc1], 0);
+    equals(res[0].name, "or");
+    equals(res[0].src, "%eax");
+    equals(res[0].dest, "%ecx");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x0a, 0xc1], 0);
+    equals(res[0].name, "or");
+    equals(res[0].src, "%cl");
+    equals(res[0].dest, "%al");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x0b, 0xc1], 0);
+    equals(res[0].name, "or");
+    equals(res[0].src, "%ecx");
+    equals(res[0].dest, "%eax");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x10, 0xc1], 0);
+    equals(res[0].name, "adc");
+    equals(res[0].src, "%al");
+    equals(res[0].dest, "%cl");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x11, 0xc1], 0);
+    equals(res[0].name, "adc");
+    equals(res[0].src, "%eax");
+    equals(res[0].dest, "%ecx");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x12, 0xc1], 0);
+    equals(res[0].name, "adc");
+    equals(res[0].src, "%cl");
+    equals(res[0].dest, "%al");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x13, 0xc1], 0);
+    equals(res[0].name, "adc");
+    equals(res[0].src, "%ecx");
+    equals(res[0].dest, "%eax");
     equals(res[1], 2);
 });
 
