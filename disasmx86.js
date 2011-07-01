@@ -1,12 +1,29 @@
+function Register(name) {
+  this.name = name;
+}
+
+Register.prototype = {
+  toString: function(style) {
+    style = style ? style : "att";
+    if (style == "att")
+      return "%" + this.name;
+    return this.name;
+  }
+};
+
 // General-purpose registers, indexed by operand size in bytes.
 const gpregs = {
-    1: ["%al", "%cl", "%dl", "%bl", "%ah", "%ch", "%dh", "%bh"],
-    2: ["%ax", "%cx", "%dx", "%bx", "%sp", "%bp", "%si", "%di"],
-    4: ["%eax", "%ecx", "%edx", "%ebx", "%esp", "%ebp", "%esi", "%edi"]
+    1: [new Register("al"), new Register("cl"), new Register("dl"), new Register("bl"),
+        new Register("ah"), new Register("ch"), new Register("dh"), new Register("bh")],
+    2: [new Register("ax"), new Register("cx"), new Register("dx"), new Register("bx"),
+        new Register("sp"), new Register("bp"), new Register("si"), new Register("di")],
+    4: [new Register("eax"), new Register("ecx"), new Register("edx"), new Register("ebx"),
+        new Register("esp"), new Register("ebp"), new Register("esi"), new Register("edi")]
 };
 
 // Segment registers.
-const segregs = ["%es","%cs","%ss","%ds","%fs","%gs"];
+const segregs = [new Register("es"), new Register("cs"), new Register("ss"),
+                 new Register("ds"), new Register("fs"),new Register("gs")];
 
 const flags = {
     PREFIX_LOCK: 1,
