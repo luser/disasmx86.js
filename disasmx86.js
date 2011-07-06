@@ -11,6 +11,33 @@ Register.prototype = {
   }
 };
 
+function Immediate(value, size) {
+  this.value = value;
+  this.size = size;
+}
+
+Immediate.prototype = {
+  toString: function(style) {
+    style = style ? style : "att";
+    // format hex string first
+    var v = this.value.toString(16);
+    if (v.length < 2 * this.size) {
+      // zero-pad to the left
+      v = Array(2 * this.size - v.length + 1).join("0") + v;
+    }
+    // AT&T literals start with $0x
+    if (style == "att") {
+      return "$0x" + v;
+    }
+    // Intel literals must start with a digit
+    if (!/[^\d]/.test(v)) {
+      v = "0" + v;
+    }
+    // and end with h
+    return v + "h";
+  }
+};
+
 // General-purpose registers, indexed by operand size in bytes.
 const gpregs = {
     1: [new Register("al"), new Register("cl"), new Register("dl"), new Register("bl"),
@@ -88,7 +115,12 @@ const opcodes_x86 = {
            src_size: "v",
            dest_type: "G",
            dest_size: "v"},
-    //0x0C OR AL,Ib
+    0x0c: {name:"or",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:0},
     //0x0D OR rAX,Iz
     0x0e: {name:"push",
            src_type: "RS",
@@ -248,99 +280,131 @@ const opcodes_x86 = {
     0x3f: {name:"aas"},
     0x40: {name:"inc",
            src_type: "RR",
+           src_size: "v",
            src:0},
     0x41: {name:"inc",
            src_type: "RR",
+           src_size: "v",
            src:1},
     0x42: {name:"inc",
            src_type: "RR",
+           src_size: "v",
            src:2},
     0x43: {name:"inc",
            src_type: "RR",
+           src_size: "v",
            src:3},
     0x44: {name:"inc",
            src_type: "RR",
+           src_size: "v",
            src:4},
     0x45: {name:"inc",
            src_type: "RR",
+           src_size: "v",
            src:5},
     0x46: {name:"inc",
            src_type: "RR",
+           src_size: "v",
            src:6},
     0x47: {name:"inc",
            src_type: "RR",
+           src_size: "v",
            src:7},
     0x48: {name:"dec",
            src_type: "RR",
+           src_size: "v",
            src:0},
     0x49: {name:"dec",
            src_type: "RR",
+           src_size: "v",
            src:1},
     0x4a: {name:"dec",
            src_type: "RR",
+           src_size: "v",
            src:2},
     0x4b: {name:"dec",
            src_type: "RR",
+           src_size: "v",
            src:3},
     0x4c: {name:"dec",
            src_type: "RR",
+           src_size: "v",
            src:4},
     0x4d: {name:"dec",
            src_type: "RR",
+           src_size: "v",
            src:5},
     0x4e: {name:"dec",
            src_type: "RR",
+           src_size: "v",
            src:6},
     0x4f: {name:"dec",
            src_type: "RR",
+           src_size: "v",
            src:7},
     0x50: {name:"push",
            src_type: "RR",
+           src_size: "v",
            src:0},
     0x51: {name:"push",
            src_type: "RR",
+           src_size: "v",
            src:1},
     0x52: {name:"push",
            src_type: "RR",
+           src_size: "v",
            src:2},
     0x53: {name:"push",
            src_type: "RR",
+           src_size: "v",
            src:3},
     0x54: {name:"push",
            src_type: "RR",
+           src_size: "v",
            src:4},
     0x55: {name:"push",
            src_type: "RR",
+           src_size: "v",
            src:5},
     0x56: {name:"push",
            src_type: "RR",
+           src_size: "v",
            src:6},
     0x57: {name:"push",
            src_type: "RR",
+           src_size: "v",
            src:7},
     0x58: {name:"pop",
            src_type: "RR",
+           src_size: "v",
            src:0},
     0x59: {name:"pop",
            src_type: "RR",
+           src_size: "v",
            src:1},
     0x5a: {name:"pop",
            src_type: "RR",
+           src_size: "v",
            src:2},
     0x5b: {name:"pop",
            src_type: "RR",
+           src_size: "v",
            src:3},
     0x5c: {name:"pop",
            src_type: "RR",
+           src_size: "v",
            src:4},
     0x5d: {name:"pop",
            src_type: "RR",
+           src_size: "v",
            src:5},
     0x5e: {name:"pop",
            src_type: "RR",
+           src_size: "v",
            src:6},
     0x5f: {name:"pop",
            src_type: "RR",
+           src_size: "v",
            src:7},
     //0x60 PUSHA[D]
     //0x61 POPA[D]
@@ -425,38 +489,52 @@ const opcodes_x86 = {
     0x90: {name:"nop"},
     0x91: {name:"xchg",
            src_type: "RR",
+           src_size: "v",
            src:0,
            dest_type: "RR",
+           dest_size: "v",
            dest:1},
     0x92: {name:"xchg",
            src_type: "RR",
+           src_size: "v",
            src:0,
            dest_type: "RR",
+           dest_size: "v",
            dest:2},
     0x93: {name:"xchg",
            src_type: "RR",
+           src_size: "v",
            src:0,
            dest_type: "RR",
+           dest_size: "v",
            dest:3},
     0x94: {name:"xchg",
            src_type: "RR",
+           src_size: "v",
            src:0,
            dest_type: "RR",
+           dest_size: "v",
            dest:4},
     0x95: {name:"xchg",
            src_type: "RR",
+           src_size: "v",
            src:0,
            dest_type: "RR",
+           dest_size: "v",
            dest:5},
     0x96: {name:"xchg",
            src_type: "RR",
+           src_size: "v",
            src:0,
            dest_type: "RR",
+           dest_size: "v",
            dest:6},
     0x97: {name:"xchg",
            src_type: "RR",
+           src_size: "v",
            src:0,
            dest_type: "RR",
+           dest_size: "v",
            dest:7},
     //0x98 CBW/CWDE
     //0x99 CWD/CDQ
@@ -610,13 +688,17 @@ function handle_prefixes(bytes, offset, config, default_size) {
 }
 
 /*
- * Fetch the byte from |bytes| at |offset| and return it, or return
- * -1 if there are no more bytes left.
+ * Fetch |count| bytes from |bytes| at |offset| and return the value as a little-endian
+ * integer.
  */
-function fetch_byte(bytes, offset) {
-    if (offset >= bytes.length)
-        return -1;
-    return bytes[offset];
+function fetch_bytes(count, bytes, offset) {
+    if (offset + count > bytes.length)
+        throw new Error("Ran out of bytes!");
+  var val = 0;
+  for (var i = 0; i < count; i++) {
+    val |= (bytes[offset + i] << (8 * i));
+  }
+  return val;
 }
 
 /*
@@ -646,17 +728,25 @@ function decode_register(reg, opsize, config) {
     return gpregs[size][reg];
 }
 
+function modrm_mod(modrm) {
+  return (modrm & 0xc0) >> 6;
+}
+
+function modrm_rm(modrm) {
+  return modrm & 0x7;
+}
+
 /*
  * Decode the Mod R/M byte |modrm|. |which| can be "reg" or "rm".
  * |opsize| is the operand size defined for the current instruction.
  */
 function decode_modrm(modrm, which, opsize, config) {
-    var mod = (modrm & 0xc0) >> 6;
+    var mod = modrm_mod(modrm);
     var reg = (modrm & 0x38) >> 3;
-    var rm = modrm & 0x7;
+    var rm = modrm_rm(modrm);
     switch (which) {
     case "reg":
-        return [decode_register(reg, opsize, config), 0];
+        return decode_register(reg, opsize, config);
     case "rm":
         switch (mod) {
         case 0:
@@ -666,21 +756,19 @@ function decode_modrm(modrm, which, opsize, config) {
         case 2:
             break;
         case 3:
-            return [decode_register(rm, opsize, config), 0];
+            return decode_register(rm, opsize, config);
             break;
         }
         break;
     }
-    return [null, 0];
+    return null;
 }
 
 /*
  * Handle a single operand for an instruction.
  * Return the number of additional bytes consumed.
  */
-function handle_operand(insn, insn_ret, operand, config, bytes, offset) {
-    var size = 0;
-    var modrm = fetch_byte(bytes, offset);
+function handle_operand(insn, insn_ret, operand, op_bytes, config) {
     //console.log(insn[operand + "_type"]);
     switch (insn[operand + "_type"]) {
     case null:
@@ -688,7 +776,7 @@ function handle_operand(insn, insn_ret, operand, config, bytes, offset) {
         break;
     case "RR":
         // general-purpose register encoded in opcode
-        insn_ret[operand] = gpregs[config.op_size][insn[operand]];
+        insn_ret[operand] = decode_register(insn[operand], insn[operand + "_size"], config);
         break;
     case "RS":
         // segment register encoded in opcode
@@ -696,23 +784,118 @@ function handle_operand(insn, insn_ret, operand, config, bytes, offset) {
         break;
     case "E":
         // mod R/M byte, general-purpose register or memory address
-        if (modrm == -1)
-            return -1;
-        size++;
-        var ret = decode_modrm(modrm, 'rm', insn[operand + "_size"], config);
-        insn_ret[operand] = ret[0];
-        size += ret[1];
+        insn_ret[operand] = decode_modrm(op_bytes.modrm, 'rm', insn[operand + "_size"], config);
         break;
     case "G":
         // R/M byte, general-purpose register
-        if (modrm == -1)
-            return -1;
-        // Don't increment size, the other operand already read the mod R/M byte.
-        ret = decode_modrm(modrm, 'reg', insn[operand + "_size"], config);
-        insn_ret[operand] = ret[0];
+        insn_ret[operand] = decode_modrm(op_bytes.modrm, 'reg', insn[operand + "_size"], config);
+        break;
+    case "I":
+        // Immediate data
+        insn_ret[operand] = new Immediate(op_bytes.immediate, op_bytes.immediate_size);
         break;
     }
-    return size;
+}
+
+/*
+ * Fetch all the extra bytes needed to decode this opcode,
+ * including the Mod R/M byte, any displacement bytes, the SIB byte,
+ * and any immediate bytes. Return the number of bytes fetched.
+ */
+function handle_op_bytes(insn, op_bytes, config, bytes, offset) {
+  var modrm = false, immediate_size = 0;
+  var size = 0;
+  var operands = ["dest","src","aux"];
+  for (var i=0; i<operands.length; i++) {
+    switch (insn[operands[i] + "_type"]) {
+    case "C":
+    case "D":
+    case "E":
+    case "G":
+    case "M":
+    case "P":
+    case "PR":
+    case "R":
+    case "S":
+    case "T":
+    case "V":
+    case "VR":
+    case "W":
+      modrm = true;
+      break;
+    case "I":
+      switch (insn[operands[i] + "_size"]) {
+      case "b":
+        immediate_size = 1;
+        break;
+      case "w":
+        immediate_size = 2;
+        break;
+      case "d":
+        immediate_size = 4;
+        break;
+      case "q":
+        immediate_size = 8;
+        break;
+      case "o":
+        immediate_size = 16;
+        break;
+      case "v":
+      case "z":
+        immediate_size = config.op_size;
+        break;
+      }
+      break;
+    }
+  }
+  // Handle Mod R/M byte + SIB + displacement
+  if (modrm) {
+    op_bytes.modrm = fetch_bytes(1, bytes, offset);
+    offset++;
+    size++;
+    var mod = modrm_mod(op_bytes.modrm);
+    var rm = modrm_rm(op_bytes.modrm);
+    // SIB
+    if (rm == 4 && mod != 3) {
+      op_bytes.sib = fetch_bytes(1, bytes, offset);
+      offset++;
+      size++;
+    }
+    switch (mod) {
+    case 0:
+      // register-indirect addressing (or 4-byte only)
+      if (rm == 5) {
+        op_bytes.displacement_size = 4;
+        op_bytes.displacement = fetch_bytes(4, bytes, offset);
+        offset += 4;
+        size += 4;
+      }
+      break;
+    case 1:
+      op_bytes.displacement_size = 1;
+      op_bytes.displacement = fetch_bytes(1, bytes, offset);
+      offset++;
+      size++;
+      break;
+    case 2:
+      op_bytes.displacement_size = 4;
+      op_bytes.displacement = fetch_bytes(4, bytes, offset);
+      offset += 4;
+      size += 4;
+      break;
+    case 3:
+      // register addressing
+      break;
+    }
+  }
+  // Handle immediate bytes
+  if (immediate_size > 0) {
+    op_bytes.immediate_size = immediate_size;
+    op_bytes.immediate = fetch_bytes(immediate_size, bytes, offset);
+    offset += immediate_size;
+    size += immediate_size;
+  }
+  return size;
 }
 
 /*
@@ -737,11 +920,13 @@ function disassemble_x86_instruction(bytes, offset) {
             // error, too many prefixes?
             return [null, size];
         }
+        // Handle mod/rm, displacement, sib, immediate bytes all at once
+        var op_bytes = {};
+        size += handle_op_bytes(insn, op_bytes, config, bytes, offset);
         var insn_ret = {name:insn.name, config:config};
         var operands = ["dest","src","aux"];
         for (var i=0; i<operands.length; i++) {
-            var operand_size = handle_operand(insn, insn_ret, operands[i], config, bytes, offset);
-            size += operand_size;
+            handle_operand(insn, insn_ret, operands[i], op_bytes, config);
         }
         return [insn_ret, size];
     }

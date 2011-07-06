@@ -683,6 +683,14 @@ test("single byte instructions + modrm bytes", function() {
     equals(res[1], 2);
 });
 
+test("disassemble immediate bytes", function() {
+    var res = disassemble_x86_instruction([0x0c, 0xff], 0);
+    equals(res[0].name, "or");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 2);
+});
+
 test("disassemble instruction prefix", function() {
     var res = disassemble_x86_instruction([0x66, 0x90], 0);
     equals(res[0].name, "nop");
