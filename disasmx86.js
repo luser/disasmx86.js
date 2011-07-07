@@ -87,8 +87,18 @@ const opcodes_x86 = {
            src_size: "v",
            dest_type: "G",
            dest_size: "v"},
-    //0x04 ADD AL,Ib
-    //0x05 ADD rAX,Iz
+    0x04: {name:"add",
+           src_type:"I",
+           src_size:"b",
+           dest_type:"RR",
+           dest_size:"b",
+           dest:0},
+    0x05: {name:"add",
+           src_type:"I",
+           src_size:"z",
+           dest_type:"RR",
+           dest_size:"z",
+           dest:0},
     0x06: {name:"push",
            src_type: "RS",
            src:0},
@@ -121,7 +131,12 @@ const opcodes_x86 = {
            dest_type: "RR",
            dest_size: "b",
            dest:0},
-    //0x0D OR rAX,Iz
+    0x0d: {name:"or",
+           src_type:"I",
+           src_size:"z",
+           dest_type:"RR",
+           dest_size:"z",
+           dest:0},
     0x0e: {name:"push",
            src_type: "RS",
            src:1},
@@ -146,8 +161,18 @@ const opcodes_x86 = {
            src_size: "v",
            dest_type: "G",
            dest_size: "v"},
-    //0x14 ADC AL,Ib
-    //0x15 ADC rAX,Iz
+    0x14: {name:"adc",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:0},
+    0x15: {name:"adc",
+           src_type:"I",
+           src_size:"z",
+           dest_type:"RR",
+           dest_size:"z",
+           dest:0},
     0x16: {name:"push",
            src_type: "RS",
            src:2},
@@ -174,8 +199,18 @@ const opcodes_x86 = {
            src_size: "v",
            dest_type: "G",
            dest_size: "v"},
-    //0x1C SBB AL,Ib
-    //0x1D SBB rAX,Iz
+    0x1c: {name:"sbb",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:0},
+    0x1d: {name:"sbb",
+           src_type:"I",
+           src_size:"z",
+           dest_type:"RR",
+           dest_size:"z",
+           dest:0},
     0x1E: {name:"push",
            src_type: "RS",
            src:3},
@@ -202,8 +237,18 @@ const opcodes_x86 = {
            src_size: "v",
            dest_type: "G",
            dest_size: "v"},
-    //0x24 AND AL,Ib
-    //0x25 AND rAX,Iz
+    0x24: {name:"and",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:0},
+    0x25: {name:"and",
+           src_type:"I",
+           src_size:"z",
+           dest_type:"RR",
+           dest_size:"z",
+           dest:0},
     //0x26 XXX: segment override prefix ES
     0x27: {name:"daa"},
     0x28: {name:"sub",
@@ -226,8 +271,18 @@ const opcodes_x86 = {
            src_size: "v",
            dest_type: "G",
            dest_size: "v"},
-    //0x2C SUB AL,Ib
-    //0x2D SUB rAX,Iz
+    0x2c: {name:"sub",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:0},
+    0x2d: {name:"sub",
+           src_type:"I",
+           src_size:"z",
+           dest_type:"RR",
+           dest_size:"z",
+           dest:0},
     //0x2E XXX: segment override prefix CS
     0x2F: {name:"das"},
     0x30: {name:"xor",
@@ -250,8 +305,18 @@ const opcodes_x86 = {
            src_size: "v",
            dest_type: "G",
            dest_size: "v"},
-    //0x34 XOR AL,Ib
-    //0x35 XOR rAX,Iz
+    0x34: {name:"xor",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:0},
+    0x35: {name:"xor",
+           src_type:"I",
+           src_size:"z",
+           dest_type:"RR",
+           dest_size:"z",
+           dest:0},
     //0x36 XXX: segment override prefix SS
     0x37: {name:"aaa"},
     0x38: {name:"cmp",
@@ -274,8 +339,18 @@ const opcodes_x86 = {
            src_size: "v",
            dest_type: "G",
            dest_size: "v"},
-    //0x3C CMP AL,Ib
-    //0x3D CMP rAX,Iz
+    0x3c: {name:"cmp",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:0},
+    0x3d: {name:"cmp",
+           src_type:"I",
+           src_size:"z",
+           dest_type:"RR",
+           dest_size:"z",
+           dest:0},
     //0x3E XXX: segment override prefix DS
     0x3f: {name:"aas"},
     0x40: {name:"inc",
@@ -406,17 +481,21 @@ const opcodes_x86 = {
            src_type: "RR",
            src_size: "v",
            src:7},
-    //0x60 PUSHA[D]
-    //0x61 POPA[D]
+    0x60: {name:"pusha"},
+    0x61: {name:"popa"},
     //0x62 BOUND Gv,Ma
     //0x63 ARPL Ew,Gw
     //0x64 XXX: segment override prefix FS
     //0x65 XXX: segment override prefix GS
     0x66: {prefix:flags.PREFIX_OPERAND_SIZE},
     0x67: {prefix:flags.PREFIX_ADDR_SIZE},
-    //0x68 PUSH Iz
+    0x68: {name:"push",
+           src_type:"I",
+           src_size:"z"},
     //0x69 IMUL Gv,Ev,Iz
-    //0x6A PUSH Ib
+    0x6a: {name:"push",
+           src_type:"I",
+           src_size:"b"},
     //0x6B IMUL Gv,Ev,Ib
     //0x6C INS Yb,DX
     //0x6D INS Yz,DX
@@ -552,33 +631,125 @@ const opcodes_x86 = {
     //0xA5 MOVS Yv,Xv
     //0xA6 CMPS Yb,Xb
     //0xA7 CMPS Yv,Xv
-    //0xA8 TEST AL,Ib
-    //0xA9 TEST rAX,Iz
+    0xa8: {name:"test",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:0},
+    0xa9: {name:"test",
+           src_type:"I",
+           src_size:"z",
+           dest_type:"RR",
+           dest_size:"z",
+           dest:0},
     //0xAA STOS Yb,AL
     //0xAB STOS Yv,rAX
     //0xAC LODS AL,Xb
     //0xAD LODS rAX,Xv
     //0xAE SCAS Yb,AL
     //0xAF SCAS Yv,rAX
-    //0xB0 MOV AL,Ib
-    //0xB1 MOV CL,Ib
-    //0xB2 MOV DL,Ib
-    //0xB3 MOV BL,Ib
-    //0xB4 MOV AH,Ib
-    //0xB5 MOV CH,Ib
-    //0xB6 MOV DH,Ib
-    //0xB7 MOV BH,Ib
-    //0xB8 MOV rAX,Iv
-    //0xB9 MOV rCX,Iv
-    //0xBA MOV rDX,Iv
-    //0xBB MOV rBX,Iv
-    //0xBC MOV rSP,Iv
-    //0xBD MOV rBP,Iv
-    //0xBE MOV rSI,Iv
-    //0xBF MOV rDI,Iv
+    0xb0: {name:"mov",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:0},
+    0xb1: {name:"mov",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:1},
+    0xb2: {name:"mov",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:2},
+    0xb3: {name:"mov",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:3},
+    0xb4: {name:"mov",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:4},
+    0xb5: {name:"mov",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:5},
+    0xb6: {name:"mov",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:6},
+    0xb7: {name:"mov",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:7},
+    0xb8: {name:"mov",
+           src_type: "I",
+           src_size: "v",
+           dest_type: "RR",
+           dest_size: "v",
+           dest:0},
+    0xb9: {name:"mov",
+           src_type: "I",
+           src_size: "v",
+           dest_type: "RR",
+           dest_size: "v",
+           dest:1},
+    0xba: {name:"mov",
+           src_type: "I",
+           src_size: "v",
+           dest_type: "RR",
+           dest_size: "v",
+           dest:2},
+    0xbb: {name:"mov",
+           src_type: "I",
+           src_size: "v",
+           dest_type: "RR",
+           dest_size: "v",
+           dest:3},
+    0xbc: {name:"mov",
+           src_type: "I",
+           src_size: "v",
+           dest_type: "RR",
+           dest_size: "v",
+           dest:4},
+    0xbd: {name:"mov",
+           src_type: "I",
+           src_size: "v",
+           dest_type: "RR",
+           dest_size: "v",
+           dest:5},
+    0xbe: {name:"mov",
+           src_type: "I",
+           src_size: "v",
+           dest_type: "RR",
+           dest_size: "v",
+           dest:6},
+    0xbf: {name:"mov",
+           src_type: "I",
+           src_size: "v",
+           dest_type: "RR",
+           dest_size: "v",
+           dest:7},
     //0xC0 group 2 Eb,Ib
     //0xC1 group 2 Ev,Ib
-    //0xC2 RET Iw
+    0xc2: {name:"ret",
+           src_type:"I",
+           src_size:"w"},
     0xc3: {name:"ret"},
     //0xC4 LES Gz,Mp
     //0xC5 LDS Gz,Mp
@@ -586,10 +757,14 @@ const opcodes_x86 = {
     //0xC7 group 12 Ev,Iz
     //0xC8 ENTER Iw,Ib
     0xc9: {name:"leave"},
-    //0xCA RET Iw
+    0xca: {name:"lret",
+           src_type:"I",
+           src_size:"w"},
     0xcb: {name:"lret"},
     0xcc: {name:"int3"},
-    //0xCD INT Ib
+    0xcd: {name:"int",
+           src_type:"I",
+           src_size:"b"},
     0xce: {name:"into"},
     0xcf: {name:"iret"},
     //0xD0 group 2 Eb,1
@@ -722,6 +897,7 @@ function decode_register(reg, opsize, config) {
         size = 8;
         break;
     case "v":
+    case "z": //XXX?
         size = config.op_size;
         break;
     }
@@ -841,7 +1017,7 @@ function handle_op_bytes(insn, op_bytes, config, bytes, offset) {
         immediate_size = 16;
         break;
       case "v":
-      case "z":
+      case "z": //XXX: dword, not qword!
         immediate_size = config.op_size;
         break;
       }
