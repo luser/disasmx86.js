@@ -787,18 +787,62 @@ const opcodes_x86 = {
     //0xE1 LOOPE/LOOPZ Jb
     //0xE2 LOOP Jb
     //0xE3 JCXZ/JECX Jb
-    //0xE4 IN AL,Ib
-    //0xE5 IN eAX,Ib
-    //0xE6 OUT Ib,AL
-    //0xE7 OUT Ib,eAX
+    0xe4: {name:"in",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest:0},
+    0xe5: {name:"in",
+           src_type: "I",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "v",
+           dest:0},
+    0xe6: {name:"out",
+           src_type: "RR",
+           src_size: "b",
+           dest_type: "I",
+           dest_size: "b",
+           src:0},
+    0xe7: {name:"out",
+           src_type: "RR",
+           src_size: "v",
+           dest_type: "I",
+           dest_size: "b",
+           src:0},
     //0xE8 CALL Jz
     //0xE9 JMP Jz
     //0xEA JMP Ap
     //0xEB JMP Jb
-    //0xEC IN AL,DX
-    //0xED IN eAX,DX
-    //0xEE OUT DX,AL
-    //0xEF OUT DX,eAX
+    0xec: {name:"in",
+           src_type: "RR",
+           src_size: "w",
+           dest_type: "RR",
+           dest_size: "b",
+           src:2,
+           dest:0},
+    0xed: {name:"in",
+           src_type: "RR",
+           src_size: "w",
+           dest_type: "RR",
+           dest_size: "v",
+           src:2,
+           dest:0},
+    0xee: {name:"out",
+           src_type: "RR",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "w",
+           src:0,
+           dest:2},
+    0xef: {name:"out",
+           src_type: "RR",
+           src_size: "v",
+           dest_type: "RR",
+           dest_size: "w",
+           src:0,
+           dest:2},
     //0xF0 LOCK prefix
     0xf1: {name:"icebp"},
     //0xF2 REPNE prefix

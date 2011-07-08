@@ -920,6 +920,54 @@ test("disassemble immediate bytes", function() {
     equals(res[0].name, "int");
     equals(res[0].src.toString(), "$0xff");
     equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xe4, 0xff], 0);
+    equals(res[0].name, "in");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xe5, 0xff], 0);
+    equals(res[0].name, "in");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xe6, 0xff], 0);
+    equals(res[0].name, "out");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xe7, 0xff], 0);
+    equals(res[0].name, "out");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[0].dest.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xec], 0);
+    equals(res[0].name, "in");
+    equals(res[0].src.toString(), "%dx");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0xed], 0);
+    equals(res[0].name, "in");
+    equals(res[0].src.toString(), "%dx");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0xee], 0);
+    equals(res[0].name, "out");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "%dx");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0xef], 0);
+    equals(res[0].name, "out");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[0].dest.toString(), "%dx");
+    equals(res[1], 1);
 });
 
 test("disassemble instruction prefix", function() {
