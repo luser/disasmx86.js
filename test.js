@@ -1016,6 +1016,86 @@ test("disassemble immediate bytes", function() {
     equals(res[0].src.toString(), "$0xff");
     equals(res[1], 2);
 
+    res = disassemble_x86_instruction([0x70, 0xff], 0);
+    equals(res[0].name, "jo");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x71, 0xff], 0);
+    equals(res[0].name, "jno");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x72, 0xff], 0);
+    equals(res[0].name, "jb");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x73, 0xff], 0);
+    equals(res[0].name, "jnb");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x74, 0xff], 0);
+    equals(res[0].name, "jz");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x75, 0xff], 0);
+    equals(res[0].name, "jnz");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x76, 0xff], 0);
+    equals(res[0].name, "jbe");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x77, 0xff], 0);
+    equals(res[0].name, "jnbe");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x78, 0xff], 0);
+    equals(res[0].name, "js");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x79, 0xff], 0);
+    equals(res[0].name, "jns");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x7a, 0xff], 0);
+    equals(res[0].name, "jp");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x7b, 0xff], 0);
+    equals(res[0].name, "jnp");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x7c, 0xff], 0);
+    equals(res[0].name, "jl");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x7d, 0xff], 0);
+    equals(res[0].name, "jnl");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x7e, 0xff], 0);
+    equals(res[0].name, "jle");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x7f, 0xff], 0);
+    equals(res[0].name, "jnle");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
+
     res = disassemble_x86_instruction([0xa8, 0xff], 0);
     equals(res[0].name, "test");
     equals(res[0].src.toString(), "$0xff");

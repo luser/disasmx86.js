@@ -505,22 +505,54 @@ const opcodes_x86 = {
     //0x6D INS Yz,DX
     //0x6E OUTS DX,Xb
     //0x6F OUTS DX,Xz
-    //0x70 JO Jb
-    //0x71 JNO Jb
-    //0x72 JB Jb
-    //0x73 JNB Jb
-    //0x74 JZ Jb
-    //0x75 JNZ Jb
-    //0x76 JBE Jb
-    //0x77 JNBE Jb
-    //0x78 JS Jb
-    //0x79 JNS Jb
-    //0x7A JP Jb
-    //0x7B JNP Jb
-    //0x7C JL Jb
-    //0x7D JNL Jb
-    //0x7E JLE Jb
-    //0x7F JNLE Jb
+    0x70: {name:"jo",
+           src_type: "J",
+           src_size: "b"},
+    0x71: {name:"jno",
+           src_type: "J",
+           src_size: "b"},
+    0x72: {name:"jb",
+           src_type: "J",
+           src_size: "b"},
+    0x73: {name:"jnb",
+           src_type: "J",
+           src_size: "b"},
+    0x74: {name:"jz",
+           src_type: "J",
+           src_size: "b"},
+    0x75: {name:"jnz",
+           src_type: "J",
+           src_size: "b"},
+    0x76: {name:"jbe",
+           src_type: "J",
+           src_size: "b"},
+    0x77: {name:"jnbe",
+           src_type: "J",
+           src_size: "b"},
+    0x78: {name:"js",
+           src_type: "J",
+           src_size: "b"},
+    0x79: {name:"jns",
+           src_type: "J",
+           src_size: "b"},
+    0x7a: {name:"jp",
+           src_type: "J",
+           src_size: "b"},
+    0x7b: {name:"jnp",
+           src_type: "J",
+           src_size: "b"},
+    0x7c: {name:"jl",
+           src_type: "J",
+           src_size: "b"},
+    0x7d: {name:"jnl",
+           src_type: "J",
+           src_size: "b"},
+    0x7e: {name:"jle",
+           src_type: "J",
+           src_size: "b"},
+    0x7f: {name:"jnle",
+           src_type: "J",
+           src_size: "b"},
     0x80: { // group 1 Eb,Ib
       table_type:tables.MODRM,
       0x0: {name:"add",
