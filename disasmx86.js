@@ -52,18 +52,18 @@ const gpregs = {
 const segregs = [new Register("es"), new Register("cs"), new Register("ss"),
                  new Register("ds"), new Register("fs"),new Register("gs")];
 
-const flags = {
-    PREFIX_LOCK: 1,
-    PREFIX_REPE: 2,
-    PREFIX_REPNE: 3,
-    PREFIX_SEGMENT_CS: 4,
-    PREFIX_SEGMENT_SS: 5,
-    PREFIX_SEGMENT_DS: 6,
-    PREFIX_SEGMENT_ES: 7,
-    PREFIX_SEGMENT_FS: 8,
-    PREFIX_SEGMENT_GS: 9,
-    PREFIX_OPERAND_SIZE: 10,
-    PREFIX_ADDR_SIZE: 11
+const prefix = {
+    LOCK: 1,
+    REPE: 2,
+    REPNE: 3,
+    SEGMENT_CS: 4,
+    SEGMENT_SS: 5,
+    SEGMENT_DS: 6,
+    SEGMENT_ES: 7,
+    SEGMENT_FS: 8,
+    SEGMENT_GS: 9,
+    OPERAND_SIZE: 10,
+    ADDR_SIZE: 11
 };
 
 const tables = {
@@ -491,8 +491,8 @@ const opcodes_x86 = {
     //0x63 ARPL Ew,Gw
     //0x64 XXX: segment override prefix FS
     //0x65 XXX: segment override prefix GS
-    0x66: {prefix:flags.PREFIX_OPERAND_SIZE},
-    0x67: {prefix:flags.PREFIX_ADDR_SIZE},
+    0x66: {prefix_type:prefix.OPERAND_SIZE},
+    0x67: {prefix_type:prefix.ADDR_SIZE},
     0x68: {name:"push",
            src_type:"I",
            src_size:"z"},
@@ -983,10 +983,18 @@ const opcodes_x86 = {
            dest_type: "I",
            dest_size: "b",
            src:0},
-    //0xE8 CALL Jz
-    //0xE9 JMP Jz
-    //0xEA JMP Ap
-    //0xEB JMP Jb
+    0xe8: {name:"call",
+           src_type: "J",
+           src_size: "z"},
+    0xe9: {name:"jmp",
+           src_type: "J",
+           src_size: "z"},
+    0xea: {name:"jmp",
+           src_type: "A",
+           src_size: "z"},
+    0xeb: {name:"jmp",
+           src_type: "J",
+           src_size: "b"},
     0xec: {name:"in",
            src_type: "RR",
            src_size: "w",
@@ -1041,36 +1049,36 @@ const opcodes_x86 = {
 function handle_prefixes(bytes, offset, config, default_size) {
     var count = 0;
     while (count < 4 && offset < bytes.length) {
-        var prefix = bytes[offset++];
-        if (!(prefix in opcodes_x86))
+        var pb = bytes[offset++];
+        if (!(pb in opcodes_x86))
             break;
 
-        var p = opcodes_x86[prefix];
-        if (!p.prefix)
+        var p = opcodes_x86[pb];
+        if (!p.prefix_type)
             break;
 
         count++;
-        switch (p.prefix) {
-        case flags.PREFIX_LOCK:
+        switch (p.prefix_type) {
+        case prefix.LOCK:
             config.lock = true;
             break;
-        case flags.PREFIX_REPE:
-        case flags.PREFIX_REPNE:
+        case prefix.REPE:
+        case prefix.REPNE:
             //TODO
             break;
-        case flags.PREFIX_SEGMENT_CS:
-        case flags.PREFIX_SEGMENT_SS:
-        case flags.PREFIX_SEGMENT_DS:
-        case flags.PREFIX_SEGMENT_ES:
-        case flags.PREFIX_SEGMENT_FS:
-        case flags.PREFIX_SEGMENT_GS:
+        case prefix.SEGMENT_CS:
+        case prefix.SEGMENT_SS:
+        case prefix.SEGMENT_DS:
+        case prefix.SEGMENT_ES:
+        case prefix.SEGMENT_FS:
+        case prefix.SEGMENT_GS:
             //TODO
             break;
-        case flags.PREFIX_OPERAND_SIZE:
+        case prefix.OPERAND_SIZE:
             //TODO: handle 64-bit
             config.op_size = default_size == 4 ? 2 : 4;
             break;
-        case flags.PREFIX_ADDR_SIZE:
+        case prefix.ADDR_SIZE:
             config.addr_size = default_size == 4 ? 2 : 4;
             break;
         }
@@ -1186,7 +1194,9 @@ function handle_operand(insn, insn_ret, operand, op_bytes, config) {
         // R/M byte, general-purpose register
         insn_ret[operand] = decode_modrm(op_bytes.modrm, 'reg', insn[operand + "_size"], config);
         break;
+    case "A":
     case "I":
+    case "J": //XXX: offset relative to instruction pointer!
         // Immediate data
         insn_ret[operand] = new Immediate(op_bytes.immediate, op_bytes.immediate_size);
         break;
@@ -1236,7 +1246,9 @@ function handle_op_bytes(insn, op_bytes, config, bytes, offset) {
     case "W":
       modrm = true;
       break;
+    case "A":
     case "I":
+    case "J":
       switch (insn[operands[i] + "_size"]) {
       case "b":
         immediate_size = 1;
@@ -1255,7 +1267,12 @@ function handle_op_bytes(insn, op_bytes, config, bytes, offset) {
         break;
       case "v":
       case "z": //XXX: dword, not qword!
-        immediate_size = config.op_size;
+        if (insn[operands[i] + "_type"] == "I") {
+          immediate_size = config.op_size;
+        }
+        else {
+          immediate_size = config.addr_size;
+        }
         break;
       }
       break;

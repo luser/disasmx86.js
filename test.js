@@ -334,6 +334,30 @@ test("disassemble instruction single bytes", function() {
     equals(res[0].name, "salc");
     equals(res[1], 1);
 
+    res = disassemble_x86_instruction([0xec], 0);
+    equals(res[0].name, "in");
+    equals(res[0].src.toString(), "%dx");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0xed], 0);
+    equals(res[0].name, "in");
+    equals(res[0].src.toString(), "%dx");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0xee], 0);
+    equals(res[0].name, "out");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "%dx");
+    equals(res[1], 1);
+
+    res = disassemble_x86_instruction([0xef], 0);
+    equals(res[0].name, "out");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[0].dest.toString(), "%dx");
+    equals(res[1], 1);
+
     res = disassemble_x86_instruction([0xf4], 0);
     equals(res[0].name, "hlt");
     equals(res[1], 1);
@@ -1139,29 +1163,25 @@ test("disassemble immediate bytes", function() {
     equals(res[0].dest.toString(), "$0xff");
     equals(res[1], 2);
 
-    res = disassemble_x86_instruction([0xec], 0);
-    equals(res[0].name, "in");
-    equals(res[0].src.toString(), "%dx");
-    equals(res[0].dest.toString(), "%al");
-    equals(res[1], 1);
+    res = disassemble_x86_instruction([0xe8, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "call");
+    equals(res[0].src.toString(), "$0x11223344");
+    equals(res[1], 5);
 
-    res = disassemble_x86_instruction([0xed], 0);
-    equals(res[0].name, "in");
-    equals(res[0].src.toString(), "%dx");
-    equals(res[0].dest.toString(), "%eax");
-    equals(res[1], 1);
+    res = disassemble_x86_instruction([0xe9, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "jmp");
+    equals(res[0].src.toString(), "$0x11223344");
+    equals(res[1], 5);
 
-    res = disassemble_x86_instruction([0xee], 0);
-    equals(res[0].name, "out");
-    equals(res[0].src.toString(), "%al");
-    equals(res[0].dest.toString(), "%dx");
-    equals(res[1], 1);
+    res = disassemble_x86_instruction([0xea, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "jmp");
+    equals(res[0].src.toString(), "$0x11223344");
+    equals(res[1], 5);
 
-    res = disassemble_x86_instruction([0xef], 0);
-    equals(res[0].name, "out");
-    equals(res[0].src.toString(), "%eax");
-    equals(res[0].dest.toString(), "%dx");
-    equals(res[1], 1);
+    res = disassemble_x86_instruction([0xeb, 0xff], 0);
+    equals(res[0].name, "jmp");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 2);
 });
 
 test("disassemble instruction prefix", function() {
