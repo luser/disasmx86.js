@@ -1225,7 +1225,7 @@ function disassemble_x86_instruction(bytes, offset) {
     }
     else {
         // Unknown
-        return [null, 0];
+        return [null, 1];
     }
 }
 
