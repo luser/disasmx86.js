@@ -66,6 +66,10 @@ const flags = {
     PREFIX_ADDR_SIZE: 11
 };
 
+const tables = {
+  MODRM: 0
+};
+
 const opcodes_x86 = {
     0x00: {name:"add",
            src_type: "G",
@@ -517,7 +521,49 @@ const opcodes_x86 = {
     //0x7D JNL Jb
     //0x7E JLE Jb
     //0x7F JNLE Jb
-    //0x80 group 1 Eb,Ib
+    0x80: { // group 1 Eb,Ib
+      table_type:tables.MODRM,
+      0x0: {name:"add",
+            src_type: "I",
+            src_size: "b",
+            dest_type: "E",
+            dest_size: "b"},
+      0x1: {name:"or",
+            src_type: "I",
+            src_size: "b",
+            dest_type: "E",
+            dest_size: "b"},
+      0x2: {name:"adc",
+            src_type: "I",
+            src_size: "b",
+            dest_type: "E",
+            dest_size: "b"},
+      0x3: {name:"sbb",
+            src_type: "I",
+            src_size: "b",
+            dest_type: "E",
+            dest_size: "b"},
+      0x4: {name:"and",
+            src_type: "I",
+            src_size: "b",
+            dest_type: "E",
+            dest_size: "b"},
+      0x5: {name:"sub",
+            src_type: "I",
+            src_size: "b",
+            dest_type: "E",
+            dest_size: "b"},
+      0x6: {name:"xor",
+            src_type: "I",
+            src_size: "b",
+            dest_type: "E",
+            dest_size: "b"},
+      0x7: {name:"cmp",
+            src_type: "I",
+            src_size: "b",
+            dest_type: "E",
+            dest_size: "b"}
+    },
     //0x81 group 1 Ev,Iz
     //0x82 group 1 Eb,Ib
     //0x83 group 1 Ev,Ib
@@ -952,6 +998,10 @@ function modrm_mod(modrm) {
   return (modrm & 0xc0) >> 6;
 }
 
+function modrm_reg(modrm) {
+  return (modrm & 0x38) >> 3;
+}
+
 function modrm_rm(modrm) {
   return modrm & 0x7;
 }
@@ -962,7 +1012,7 @@ function modrm_rm(modrm) {
  */
 function decode_modrm(modrm, which, opsize, config) {
     var mod = modrm_mod(modrm);
-    var reg = (modrm & 0x38) >> 3;
+    var reg = modrm_reg(modrm);
     var rm = modrm_rm(modrm);
     switch (which) {
     case "reg":
@@ -1015,6 +1065,23 @@ function handle_operand(insn, insn_ret, operand, op_bytes, config) {
         insn_ret[operand] = new Immediate(op_bytes.immediate, op_bytes.immediate_size);
         break;
     }
+}
+
+/*
+ * Handle multi-byte instruction table lookup.
+ * Return 
+ */
+function handle_subtable(table, config, bytes, offset) {
+  var size = 0;
+  var index;
+  switch (table.table_type) {
+  case tables.MODRM:
+    var modrm = fetch_bytes(1, bytes, offset);
+    // Don't increment size because handle_op_bytes will consume the Mod R/M byte.
+    index = modrm_reg(modrm);
+    break;
+  }
+  return [table[index], size];
 }
 
 /*
@@ -1133,12 +1200,18 @@ function disassemble_x86_instruction(bytes, offset) {
     var op = bytes[offset];
     if (op in opcodes_x86) {
         var insn = opcodes_x86[op];
-        //TODO: handle multi-byte opcodes
         size++;
         offset++;
         if (insn.prefix) {
             // error, too many prefixes?
             return [null, size];
+        }
+        if ('table_type' in insn) {
+          // subtable lookup for multi-byte opcodes
+          var ret = handle_subtable(insn, config, bytes, offset);
+          insn = ret[0];
+          size += ret[1];
+          offset += ret[1];
         }
         // Handle mod/rm, displacement, sib, immediate bytes all at once
         var op_bytes = {};
