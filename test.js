@@ -363,7 +363,7 @@ test("disassemble instruction single bytes", function() {
     equals(res[1], 1);
 });
 
-test("disassemble modrm byte registers", function() {
+test("modrm byte registers", function() {
     var res = disassemble_x86_instruction([0x00, 0xc0], 0);
     equals(res[0].name, "add");
     equals(res[0].src.toString(), "%al");
@@ -471,6 +471,308 @@ test("disassemble modrm byte registers", function() {
     equals(res[0].src.toString(), "%ecx");
     equals(res[0].dest.toString(), "%eax");
     equals(res[1], 2);
+});
+
+test("modrm byte register addressing", function() {
+    var res = disassemble_x86_instruction([0x00, 0x00], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "(%al)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x00, 0x01], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "(%cl)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x00, 0x02], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "(%dl)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x00, 0x03], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "(%bl)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x00, 0x06], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "(%dh)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x00, 0x07], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "(%bh)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x00, 0x08], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%cl");
+    equals(res[0].dest.toString(), "(%al)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x00, 0x10], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%dl");
+    equals(res[0].dest.toString(), "(%al)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x00, 0x18], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%bl");
+    equals(res[0].dest.toString(), "(%al)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x00, 0x20], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%ah");
+    equals(res[0].dest.toString(), "(%al)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x00, 0x28], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%ch");
+    equals(res[0].dest.toString(), "(%al)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x00, 0x30], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%dh");
+    equals(res[0].dest.toString(), "(%al)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x00, 0x38], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%bh");
+    equals(res[0].dest.toString(), "(%al)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x01, 0x00], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[0].dest.toString(), "(%eax)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x01, 0x01], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[0].dest.toString(), "(%ecx)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0x01, 0x08], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%ecx");
+    equals(res[0].dest.toString(), "(%eax)");
+    equals(res[1], 2);
+});
+
+test("modrm byte register addressing 1 byte displacement", function() {
+    var res = disassemble_x86_instruction([0x00, 0x40, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0xff(%al)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x00, 0x41, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0xff(%cl)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x00, 0x42, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0xff(%dl)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x00, 0x43, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0xff(%bl)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x00, 0x46, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0xff(%dh)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x00, 0x47, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0xff(%bh)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x00, 0x48, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%cl");
+    equals(res[0].dest.toString(), "$0xff(%al)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x00, 0x50, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%dl");
+    equals(res[0].dest.toString(), "$0xff(%al)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x00, 0x58, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%bl");
+    equals(res[0].dest.toString(), "$0xff(%al)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x00, 0x60, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%ah");
+    equals(res[0].dest.toString(), "$0xff(%al)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x00, 0x68, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%ch");
+    equals(res[0].dest.toString(), "$0xff(%al)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x00, 0x70, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%dh");
+    equals(res[0].dest.toString(), "$0xff(%al)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x00, 0x78, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%bh");
+    equals(res[0].dest.toString(), "$0xff(%al)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x01, 0x40, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[0].dest.toString(), "$0xff(%eax)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x01, 0x41, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[0].dest.toString(), "$0xff(%ecx)");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0x01, 0x48, 0xff], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%ecx");
+    equals(res[0].dest.toString(), "$0xff(%eax)");
+    equals(res[1], 3);
+});
+
+test("modrm byte register addressing 4 byte displacement", function() {
+    var res = disassemble_x86_instruction([0x00, 0x80, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0x11223344(%al)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x00, 0x81, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0x11223344(%cl)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x00, 0x82, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0x11223344(%dl)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x00, 0x83, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0x11223344(%bl)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x00, 0x86, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0x11223344(%dh)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x00, 0x87, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0x11223344(%bh)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x00, 0x88, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%cl");
+    equals(res[0].dest.toString(), "$0x11223344(%al)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x00, 0x90, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%dl");
+    equals(res[0].dest.toString(), "$0x11223344(%al)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x00, 0x98, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%bl");
+    equals(res[0].dest.toString(), "$0x11223344(%al)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x00, 0xa0, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%ah");
+    equals(res[0].dest.toString(), "$0x11223344(%al)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x00, 0xa8, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%ch");
+    equals(res[0].dest.toString(), "$0x11223344(%al)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x00, 0xb0, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%dh");
+    equals(res[0].dest.toString(), "$0x11223344(%al)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x00, 0xb8, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%bh");
+    equals(res[0].dest.toString(), "$0x11223344(%al)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x01, 0x80, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[0].dest.toString(), "$0x11223344(%eax)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x01, 0x81, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[0].dest.toString(), "$0x11223344(%ecx)");
+    equals(res[1], 6);
+
+    res = disassemble_x86_instruction([0x01, 0x88, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%ecx");
+    equals(res[0].dest.toString(), "$0x11223344(%eax)");
+    equals(res[1], 6);
+});
+
+test("modrm byte 4 byte displacement", function() {
+    var res = disassemble_x86_instruction([0x00, 0x05, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "add");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0x11223344");
+    equals(res[1], 6);
 });
 
 test("single byte instructions + modrm bytes", function() {

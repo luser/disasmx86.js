@@ -11,12 +11,12 @@ Register.prototype = {
   }
 };
 
-function Immediate(value, size) {
+function Literal(value, size) {
   this.value = value;
   this.size = size;
 }
 
-Immediate.prototype = {
+Literal.prototype = {
   toString: function(style) {
     style = style ? style : "att";
     // format hex string first
@@ -35,6 +35,28 @@ Immediate.prototype = {
     }
     // and end with h
     return v + "h";
+  }
+};
+
+function Address(parts) {
+  this.register = parts.register || null;
+  this.displacement = parts.displacement || null;
+};
+
+Address.prototype = {
+  toString: function(style)  {
+    style = style ? style : "att";
+    if (style == "att") {
+      var val = "";
+      if (this.displacement != null) {
+        val = this.displacement.toString(style);
+      }
+      if (this.register != null) {
+        val += "(" + this.register.toString(style) + ")";
+      }
+      return val;
+    }
+    return "";
   }
 };
 
@@ -1173,27 +1195,39 @@ function modrm_rm(modrm) {
 }
 
 /*
- * Decode the Mod R/M byte |modrm|. |which| can be "reg" or "rm".
+ * Decode the Mod R/M byte in |op_bytes|. |which| can be "reg" or "rm".
  * |opsize| is the operand size defined for the current instruction.
  */
-function decode_modrm(modrm, which, opsize, config) {
-    var mod = modrm_mod(modrm);
-    var reg = modrm_reg(modrm);
-    var rm = modrm_rm(modrm);
+function decode_modrm(op_bytes, which, opsize, config) {
+    var mod = modrm_mod(op_bytes.modrm);
+    var reg = modrm_reg(op_bytes.modrm);
+    var rm = modrm_rm(op_bytes.modrm);
     switch (which) {
     case "reg":
         return decode_register(reg, opsize, config);
     case "rm":
-        switch (mod) {
-        case 0:
-            break;
-        case 1:
-            break;
-        case 2:
-            break;
-        case 3:
+        if (rm == 4 && mod != 3) {
+          // SIB mode
+        }
+        else {
+          switch (mod) {
+          case 0: // register-indirect addressing
+            if (rm == 5) {
+              // 4-byte displacement only
+              return new Address({displacement: new Literal(op_bytes.displacement,
+                                                            op_bytes.displacement_size)});
+            }
+            
+            return new Address({register: decode_register(rm, opsize, config)});
+          case 1: // register-indirect + 1 byte displacement
+          case 2: // register-indirect + 4 byte displacement
+            return new Address({register: decode_register(rm, opsize, config),
+                                displacement: new Literal(op_bytes.displacement,
+                                                          op_bytes.displacement_size)});
+          case 3: // register-only addressing
             return decode_register(rm, opsize, config);
             break;
+          }
         }
         break;
     }
@@ -1220,17 +1254,17 @@ function handle_operand(insn, insn_ret, operand, op_bytes, config) {
         break;
     case "E":
         // mod R/M byte, general-purpose register or memory address
-        insn_ret[operand] = decode_modrm(op_bytes.modrm, 'rm', insn[operand + "_size"], config);
+        insn_ret[operand] = decode_modrm(op_bytes, 'rm', insn[operand + "_size"], config);
         break;
     case "G":
         // R/M byte, general-purpose register
-        insn_ret[operand] = decode_modrm(op_bytes.modrm, 'reg', insn[operand + "_size"], config);
+        insn_ret[operand] = decode_modrm(op_bytes, 'reg', insn[operand + "_size"], config);
         break;
     case "A":
     case "I":
     case "J": //XXX: offset relative to instruction pointer!
         // Immediate data
-        insn_ret[operand] = new Immediate(op_bytes.immediate, op_bytes.immediate_size);
+        insn_ret[operand] = new Literal(op_bytes.immediate, op_bytes.immediate_size);
         break;
     }
 }
@@ -1327,6 +1361,7 @@ function handle_op_bytes(insn, op_bytes, config, bytes, offset) {
     case 0:
       // register-indirect addressing (or 4-byte only)
       if (rm == 5) {
+        //XXX: displacement is signed
         op_bytes.displacement_size = 4;
         op_bytes.displacement = fetch_bytes(4, bytes, offset);
         offset += 4;
@@ -1334,12 +1369,14 @@ function handle_op_bytes(insn, op_bytes, config, bytes, offset) {
       }
       break;
     case 1:
+      //XXX: displacement is signed
       op_bytes.displacement_size = 1;
       op_bytes.displacement = fetch_bytes(1, bytes, offset);
       offset++;
       size++;
       break;
     case 2:
+      //XXX: displacement is signed
       op_bytes.displacement_size = 4;
       op_bytes.displacement = fetch_bytes(4, bytes, offset);
       offset += 4;
