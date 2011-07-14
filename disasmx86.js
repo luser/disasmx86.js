@@ -1043,9 +1043,10 @@ const opcodes_x86 = {
     0xe9: {name:"jmp",
            src_type: "J",
            src_size: "z"},
+/*TODO: handle this properly
     0xea: {name:"jmp",
            src_type: "A",
-           src_size: "z"},
+           src_size: "z"},*/
     0xeb: {name:"jmp",
            src_type: "J",
            src_size: "b"},

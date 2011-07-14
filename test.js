@@ -1,4 +1,4 @@
-test("disassemble instruction bad offset", function() {
+test("bad offset", function() {
     var res = disassemble_x86_instruction([0x0], 1);
     equals(res[0], null);
     equals(res[1], 0);
@@ -8,7 +8,7 @@ test("disassemble instruction bad offset", function() {
     equals(res[1], 0);
 });
 
-test("disassemble instruction single bytes", function() {
+test("single byte instructions", function() {
     var res = disassemble_x86_instruction([0x90], 0);
     equals(res[0].name, "nop");
     equals(res[1], 1);
@@ -1211,7 +1211,7 @@ test("modrm subtable", function() {
     equals(res[1], 3);
 });
 
-test("disassemble immediate bytes", function() {
+test("immediate bytes", function() {
     var res = disassemble_x86_instruction([0x04, 0x12], 0);
     equals(res[0].name, "add");
     equals(res[0].src.toString(), "$0x12");
@@ -1555,10 +1555,12 @@ test("disassemble immediate bytes", function() {
     equals(res[0].src.toString(), "$0x11223344");
     equals(res[1], 5);
 
+       /*TODO: this is not right
     res = disassemble_x86_instruction([0xea, 0x44, 0x33, 0x22, 0x11], 0);
     equals(res[0].name, "jmp");
     equals(res[0].src.toString(), "$0x11223344");
     equals(res[1], 5);
+*/
 
     res = disassemble_x86_instruction([0xeb, 0xff], 0);
     equals(res[0].name, "jmp");
@@ -1566,7 +1568,7 @@ test("disassemble immediate bytes", function() {
     equals(res[1], 2);
 });
 
-test("disassemble instruction prefix", function() {
+test("instruction prefix", function() {
     var res = disassemble_x86_instruction([0x66, 0x90], 0);
     equals(res[0].name, "nop");
     equals(res[1], 2);
