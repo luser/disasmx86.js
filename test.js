@@ -1209,6 +1209,102 @@ test("modrm subtable", function() {
     equals(res[0].src.toString(), "$0xff");
     equals(res[0].dest.toString(), "%eax");
     equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc0, 0xc0, 0xff], 0);
+    equals(res[0].name, "rol");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc0, 0xc8, 0xff], 0);
+    equals(res[0].name, "ror");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc0, 0xd0, 0xff], 0);
+    equals(res[0].name, "rcl");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc0, 0xd8, 0xff], 0);
+    equals(res[0].name, "rcr");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc0, 0xe0, 0xff], 0);
+    equals(res[0].name, "shl");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc0, 0xe8, 0xff], 0);
+    equals(res[0].name, "shr");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc0, 0xf0, 0xff], 0);
+    equals(res[0].name, "sal");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc0, 0xf8, 0xff], 0);
+    equals(res[0].name, "sar");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc1, 0xc0, 0xff], 0);
+    equals(res[0].name, "rol");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc1, 0xc8, 0xff], 0);
+    equals(res[0].name, "ror");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc1, 0xd0, 0xff], 0);
+    equals(res[0].name, "rcl");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc1, 0xd8, 0xff], 0);
+    equals(res[0].name, "rcr");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc1, 0xe0, 0xff], 0);
+    equals(res[0].name, "shl");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc1, 0xe8, 0xff], 0);
+    equals(res[0].name, "shr");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc1, 0xf0, 0xff], 0);
+    equals(res[0].name, "sal");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc1, 0xf8, 0xff], 0);
+    equals(res[0].name, "sar");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[1], 3);
 });
 
 test("immediate bytes", function() {
