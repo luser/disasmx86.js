@@ -1026,6 +1026,18 @@ test("single byte instructions + modrm bytes", function() {
     equals(res[0].name, "pop");
     equals(res[0].src.toString(), "%eax");
     equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xc6, 0xc0, 0xff], 0);
+    equals(res[0].name, "mov");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[1], 3);
+
+    res = disassemble_x86_instruction([0xc7, 0xc0, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "mov");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[0].src.toString(), "$0x11223344");
+    equals(res[1], 6);
 });
 
 test("modrm subtable", function() {

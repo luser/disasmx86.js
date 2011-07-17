@@ -1089,8 +1089,22 @@ const opcodes_x86 = {
     0xc3: {name:"ret"},
     //0xC4 LES Gz,Mp
     //0xC5 LDS Gz,Mp
-    //0xC6 group 12 Eb,Ib
-    //0xC7 group 12 Ev,Iz
+    0xc6: { // group 12 Eb,Ib
+      table_type:tables.MODRM,
+      0x0: {name:"mov",
+            src_type: "I",
+            src_size: "b",
+            dest_type: "E",
+            dest_size: "b"}
+    },
+    0xc7: { // group 12 Ev,Iz
+      table_type:tables.MODRM,
+      0x0: {name:"mov",
+            src_type: "I",
+            src_size: "z",
+            dest_type: "E",
+            dest_size: "v"}
+    },
     //0xC8 ENTER Iw,Ib
     0xc9: {name:"leave"},
     0xca: {name:"lret",
