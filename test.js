@@ -1398,6 +1398,30 @@ test("immediate bytes", function() {
     equals(res[0].src.toString(), "$0xff");
     equals(res[1], 2);
 
+    res = disassemble_x86_instruction([0xa0, 0xff], 0);
+    equals(res[0].name, "mov");
+    equals(res[0].src.toString(), "$0xff");
+    equals(res[0].dest.toString(), "%al");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xa1, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "mov");
+    equals(res[0].src.toString(), "$0x11223344");
+    equals(res[0].dest.toString(), "%eax");
+    equals(res[1], 5);
+
+    res = disassemble_x86_instruction([0xa2, 0xff], 0);
+    equals(res[0].name, "mov");
+    equals(res[0].src.toString(), "%al");
+    equals(res[0].dest.toString(), "$0xff");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xa3, 0x44, 0x33, 0x22, 0x11], 0);
+    equals(res[0].name, "mov");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[0].dest.toString(), "$0x11223344");
+    equals(res[1], 5);
+
     res = disassemble_x86_instruction([0xa8, 0xff], 0);
     equals(res[0].name, "test");
     equals(res[0].src.toString(), "$0xff");

@@ -849,10 +849,30 @@ const opcodes_x86 = {
     0x9d: {name:"popf"},
     0x9e: {name:"sahf"},
     0x9f: {name:"lahf"},
-    //0xA0 MOV AL,Ob
-    //0xA1 MOV rAX,Ov
-    //0xA2 MOV Ob,AL
-    //0xA3 MOV Ov,rAX
+    0xa0: {name:"mov",
+           src_type: "O",
+           src_size: "b",
+           dest_type: "RR",
+           dest_size: "b",
+           dest: 0},
+    0xa1: {name:"mov",
+           src_type: "O",
+           src_size: "v",
+           dest_type: "RR",
+           dest_size: "v",
+           dest: 0},
+    0xa2: {name:"mov",
+           src_type: "RR",
+           src_size: "b",
+           src: 0,
+           dest_type: "O",
+           dest_size: "b"},
+    0xa3: {name:"mov",
+           src_type: "RR",
+           src_size: "v",
+           src: 0,
+           dest_type: "O",
+           dest_size: "v"},
     //0xA4 MOVS Yb,Xb
     //0xA5 MOVS Yv,Xv
     //0xA6 CMPS Yb,Xb
@@ -1043,10 +1063,10 @@ const opcodes_x86 = {
     0xe9: {name:"jmp",
            src_type: "J",
            src_size: "z"},
-/*TODO: handle this properly
+/*TODO: handle Ap properly
     0xea: {name:"jmp",
            src_type: "A",
-           src_size: "z"},*/
+           src_size: "p"},*/
     0xeb: {name:"jmp",
            src_type: "J",
            src_size: "b"},
@@ -1264,6 +1284,7 @@ function handle_operand(insn, insn_ret, operand, op_bytes, config) {
     case "A":
     case "I":
     case "J": //XXX: offset relative to instruction pointer!
+    case "O":
         // Immediate data
         insn_ret[operand] = new Literal(op_bytes.immediate, op_bytes.immediate_size);
         break;
@@ -1316,6 +1337,7 @@ function handle_op_bytes(insn, op_bytes, config, bytes, offset) {
     case "A":
     case "I":
     case "J":
+    case "O":
       switch (insn[operands[i] + "_size"]) {
       case "b":
         immediate_size = 1;
@@ -1331,6 +1353,10 @@ function handle_op_bytes(insn, op_bytes, config, bytes, offset) {
         break;
       case "o":
         immediate_size = 16;
+        break;
+      case "p":
+        // 32-bit or 48-bit pointer
+        immediate_size = config.op_size + 2;
         break;
       case "v":
       case "z": //XXX: dword, not qword!
