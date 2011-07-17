@@ -788,9 +788,15 @@ const opcodes_x86 = {
            dest_type: "G",
            dest_size: "v"},
     //0x8C MOV Mw,Sw / MOV Rv,Sw
-    //0x8D LEA Gv,M
+    0x8d: {name:"lea",
+           src_type: "M",
+           src_size: "v",
+           dest_type: "G",
+           dest_size: "v"},
     //0x8E MOV Sw,Mw / MOV Sw,Rv
-    //0x8F POP Ev
+    0x8f: {name:"pop",
+           src_type: "E",
+           src_size: "v"},
     0x90: {name:"nop"},
     0x91: {name:"xchg",
            src_type: "RR",
@@ -1358,6 +1364,7 @@ function handle_operand(insn, insn_ret, operand, op_bytes, config) {
         insn_ret[operand] = segregs[insn[operand]];
         break;
     case "E":
+    case "M": // technically this should only allow memory
         // mod R/M byte, general-purpose register or memory address
         insn_ret[operand] = decode_modrm(op_bytes, 'rm', insn[operand + "_size"], config);
         break;
