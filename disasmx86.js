@@ -1732,6 +1732,21 @@ function handle_op_bytes(insn, op_bytes, config, bytes, offset) {
       op_bytes.sib = fetch_bytes(1, bytes, offset);
       offset++;
       size++;
+      switch (mod) {
+      case 1:
+        op_bytes.displacement_size = 1;
+        op_bytes.displacement = fetch_bytes(1, bytes, offset);
+        offset++;
+        size++;
+        break;
+      case 0:
+      case 2:
+        op_bytes.displacement_size = 4;
+        op_bytes.displacement = fetch_bytes(4, bytes, offset);
+        offset += 4;
+        size += 4;
+        break;
+      }
     }
     switch (mod) {
     case 0:
