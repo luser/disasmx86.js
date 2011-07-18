@@ -1427,9 +1427,40 @@ const opcodes_x86 = {
     0xfa: {name:"cli"},
     0xfb: {name:"sti"},
     0xfc: {name:"cld"},
-    0xfd: {name:"std"}
-    //0xFE group 4 INC/DEC
-    //0xFF group 5 INC/DEC/...
+    0xfd: {name:"std"},
+    0xfe: { // group 4
+      table_type:tables.MODRM,
+      0x00: {name:"inc",
+             src_type: "E",
+             src_size: "b"},
+      0x01: {name:"dec",
+             src_type: "E",
+             src_size: "b"}
+    },
+    0xff: { // group 5
+      table_type:tables.MODRM,
+      0x00: {name:"inc",
+             src_type: "E",
+             src_size: "v"},
+      0x01: {name:"dec",
+             src_type: "E",
+             src_size: "v"},
+      0x02: {name:"call",
+             src_type: "E",
+             src_size: "v"},
+      0x03: {name:"call",
+             src_type: "M",
+             src_size: "p"},
+      0x04: {name:"jmp",
+             src_type: "E",
+             src_size: "v"},
+      0x05: {name:"jmp",
+             src_type: "M",
+             src_size: "p"},
+      0x06: {name:"push",
+             src_type: "E",
+             src_size: "v"}
+    }
 };
 
 /*
@@ -1513,6 +1544,7 @@ function decode_register(reg, opsize, config) {
         break;
     case "v":
     case "z": //XXX?
+    case "p":
         size = config.op_size;
         break;
     }

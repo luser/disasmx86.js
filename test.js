@@ -1588,6 +1588,51 @@ test("modrm subtable", function() {
     equals(res[0].name, "idiv");
     equals(res[0].src.toString(), "%eax");
     equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xfe, 0xc0], 0);
+    equals(res[0].name, "inc");
+    equals(res[0].src.toString(), "%al");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xfe, 0xc8], 0);
+    equals(res[0].name, "dec");
+    equals(res[0].src.toString(), "%al");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xff, 0xc0], 0);
+    equals(res[0].name, "inc");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xff, 0xc8], 0);
+    equals(res[0].name, "dec");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xff, 0xd0], 0);
+    equals(res[0].name, "call");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xff, 0x18], 0);
+    equals(res[0].name, "call");
+    equals(res[0].src.toString(), "(%eax)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xff, 0xe0], 0);
+    equals(res[0].name, "jmp");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xff, 0x28], 0);
+    equals(res[0].name, "jmp");
+    equals(res[0].src.toString(), "(%eax)");
+    equals(res[1], 2);
+
+    res = disassemble_x86_instruction([0xff, 0xf0], 0);
+    equals(res[0].name, "push");
+    equals(res[0].src.toString(), "%eax");
+    equals(res[1], 2);
 });
 
 test("immediate bytes", function() {
